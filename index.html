@@ -38,6 +38,13 @@
     }
     .btn-3d-secondary:active { transform: translateY(4px); box-shadow: 0 2px 0 #020617; }
 
+    .btn-3d-parent {
+      background: linear-gradient(135deg, #059669, #047857);
+      box-shadow: 0 6px 0 #064e3b, 0 10px 20px rgba(5, 150, 105, 0.4);
+      color: white; font-weight: bold;
+    }
+    .btn-3d-parent:active { transform: translateY(4px); box-shadow: 0 2px 0 #064e3b; }
+
     .btn-3d-admin {
       background: linear-gradient(135deg, #ec4899, #be185d);
       box-shadow: 0 6px 0 #831843, 0 10px 20px rgba(236, 72, 153, 0.4);
@@ -54,7 +61,7 @@
 <body class="p-3 md:p-8 flex flex-col justify-between min-h-screen">
 
   <div>
-    <!-- Navigation -->
+    <!-- Navigation with 3 Roles -->
     <header class="max-w-7xl mx-auto flex flex-wrap justify-between items-center mb-6 glass-panel p-4 md:p-5 rounded-2xl">
       <div class="flex items-center space-x-3">
         <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-2xl shadow-lg">
@@ -62,16 +69,20 @@
         </div>
         <div>
           <h1 class="text-xl md:text-2xl font-black tracking-wide text-white">Smart Comm-Book</h1>
-          <p id="roleTitle" class="text-xs text-purple-300">የመምህሩ ዳሽቦርድ (Teacher Console)</p>
+          <p id="roleTitle" class="text-xs text-purple-300">የመምህሩ ዳሽቦርድ (Teacher Mode)</p>
         </div>
       </div>
       
-      <div class="flex space-x-2 mt-4 md:mt-0">
+      <!-- 3 Role Buttons -->
+      <div class="flex flex-wrap gap-2 mt-4 md:mt-0">
+        <button id="btnParentView" onclick="switchView('parent')" class="btn-3d-parent px-3 py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5">
+          <i class="fas fa-user-friends"></i> የወላጅ ገጽ
+        </button>
         <button id="btnTeacherView" onclick="switchView('teacher')" class="btn-3d px-3 py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5">
           <i class="fas fa-chalkboard-teacher"></i> የመምህር ገጽ
         </button>
         <button id="btnAdminView" onclick="promptAdminLogin()" class="btn-3d-secondary px-3 py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 text-pink-400">
-          <i class="fas fa-user-shield"></i> አድሚን ገጽ
+          <i class="fas fa-user-shield"></i> አድሚን
         </button>
       </div>
     </header>
@@ -82,7 +93,7 @@
         <div class="flex items-center space-x-3 text-center md:text-left">
           <span class="px-2.5 py-1 bg-amber-500 text-slate-950 font-black text-[10px] rounded-lg">ማስታወቂያ</span>
           <div>
-            <h3 class="font-bold text-amber-200 text-sm md:text-base">የድርጅትዎን ወይም የትምህርት ተቋምዎን ማስታወቂያ እዚህ ያስተዋውቁ!</h3>
+            <h3 class="font-bold text-amber-200 text-sm md:text-base">የድርጅትዎን ማስታወቂያ እዚህ ያስተዋውቁ!</h3>
             <p class="text-xs text-slate-300">በሺዎች ለሚቆጠሩ ወላጆች እና መምህራን ተደራሽ ይሁኑ።</p>
           </div>
         </div>
@@ -92,7 +103,34 @@
       </div>
     </section>
 
-    <!-- 1. TEACHER VIEW -->
+    <!-- ==================== 1. የወላጅ ፖርታል (PARENT PORTAL) ==================== -->
+    <div id="parentSection" class="hidden max-w-4xl mx-auto space-y-6">
+      <!-- Search Child Box -->
+      <div class="glass-panel p-6 rounded-2xl border border-emerald-500/40 text-center">
+        <i class="fas fa-search-location text-4xl text-emerald-400 mb-2"></i>
+        <h2 class="text-lg md:text-xl font-black text-white mb-1">የልጅዎን መረጃ ይፈልጉ</h2>
+        <p class="text-xs text-slate-300 mb-4">የተማሪውን መለያ ቁጥር (ID) ወይም ያስመዘገቡትን ስልክ ቁጥር ያስገቡ</p>
+        
+        <div class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto mb-3">
+          <input type="text" id="parentSearchInput" placeholder="የተማሪ ID ወይም ስልክ ቁጥር..." class="flex-1 bg-slate-900 border border-emerald-500/40 rounded-xl px-4 py-2.5 text-white text-xs md:text-sm focus:outline-none">
+          <button onclick="parentLookup()" class="btn-3d-parent px-6 py-2.5 rounded-xl text-xs md:text-sm flex justify-center items-center gap-2">
+            <i class="fas fa-search"></i> አሳይ (View)
+          </button>
+        </div>
+
+        <div class="pt-2 border-t border-emerald-500/20">
+          <p class="text-xs text-slate-400 mb-2">ልጅዎ ገና አልተመዘገበም?</p>
+          <button onclick="openModal('parentSelfRegModal')" class="btn-3d-secondary px-4 py-2 rounded-xl text-xs text-emerald-300 flex items-center gap-1.5 mx-auto">
+            <i class="fas fa-user-plus"></i> አዲስ ተማሪ እዚህ መዝግብ (Self-Register)
+          </button>
+        </div>
+      </div>
+
+      <!-- Parent Result Display -->
+      <div id="parentResultCard" class="hidden glass-panel p-6 rounded-2xl border border-emerald-500/30"></div>
+    </div>
+
+    <!-- ==================== 2. የመምህሩ ገጽ (TEACHER VIEW) ==================== -->
     <div id="teacherSection">
       <main class="max-w-7xl mx-auto">
         <div class="glass-panel p-4 md:p-6 rounded-2xl mb-6">
@@ -109,45 +147,24 @@
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4">
-            <!-- Grade Selector from KG 1 to Grade 12 -->
             <div>
               <label class="block text-xs text-purple-300 mb-1 font-semibold">የክፍል ደረጃ (Grade)</label>
               <select id="filterGrade" class="w-full bg-slate-900/80 border border-purple-500/30 rounded-xl px-3 py-2 text-white text-xs focus:outline-none">
-                <option value="ALL">ሁሉም ክፍሎች (All Grades)</option>
-                <optgroup label="🌱 KG ደረጃ">
-                  <option value="KG 1">KG 1</option>
-                  <option value="KG 2">KG 2</option>
-                  <option value="KG 3">KG 3</option>
-                </optgroup>
-                <optgroup label="📖 አንደኛ ደረጃ">
-                  <option value="Grade 1">Grade 1</option>
-                  <option value="Grade 2">Grade 2</option>
-                  <option value="Grade 3">Grade 3</option>
-                  <option value="Grade 4">Grade 4</option>
-                  <option value="Grade 5">Grade 5</option>
-                  <option value="Grade 6">Grade 6</option>
-                  <option value="Grade 7">Grade 7</option>
-                  <option value="Grade 8">Grade 8</option>
-                </optgroup>
-                <optgroup label="🎓 ሁለተኛ ደረጃ">
-                  <option value="Grade 9">Grade 9</option>
-                  <option value="Grade 10">Grade 10</option>
-                  <option value="Grade 11">Grade 11</option>
-                  <option value="Grade 12">Grade 12</option>
-                </optgroup>
+                <option value="ALL">ሁሉም ክፍሎች (All)</option>
+                <option value="KG 1">KG 1</option><option value="KG 2">KG 2</option><option value="KG 3">KG 3</option>
+                <option value="Grade 1">Grade 1</option><option value="Grade 2">Grade 2</option><option value="Grade 3">Grade 3</option>
+                <option value="Grade 4">Grade 4</option><option value="Grade 5">Grade 5</option><option value="Grade 6">Grade 6</option>
+                <option value="Grade 7">Grade 7</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option>
+                <option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option><option value="Grade 12">Grade 12</option>
               </select>
             </div>
 
-            <!-- Section Selector -->
             <div>
               <label class="block text-xs text-purple-300 mb-1 font-semibold">ሴክሽን (Section)</label>
               <select id="filterSection" class="w-full bg-slate-900/80 border border-purple-500/30 rounded-xl px-3 py-2 text-white text-xs focus:outline-none">
                 <option value="ALL">ሁሉም ሴክሽን</option>
-                <option value="A">Section A</option>
-                <option value="B">Section B</option>
-                <option value="C">Section C</option>
-                <option value="D">Section D</option>
-                <option value="E">Section E</option>
+                <option value="A">Section A</option><option value="B">Section B</option>
+                <option value="C">Section C</option><option value="D">Section D</option><option value="E">Section E</option>
               </select>
             </div>
 
@@ -182,7 +199,7 @@
       </main>
     </div>
 
-    <!-- 2. ADMIN VIEW -->
+    <!-- ==================== 3. የአድሚን ገጽ (ADMIN VIEW) ==================== -->
     <div id="adminSection" class="hidden max-w-7xl mx-auto space-y-6">
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="glass-panel p-5 rounded-2xl border border-purple-500/30 bg-gradient-to-br from-purple-900/30 to-indigo-950/40 flex items-center justify-between">
@@ -197,60 +214,28 @@
 
         <div class="glass-panel p-5 rounded-2xl border border-pink-500/30 bg-gradient-to-br from-pink-900/30 to-slate-950/40 flex items-center justify-between">
           <div>
-            <p class="text-xs text-pink-300 font-bold uppercase">ቴሌግራም የተገናኙ</p>
-            <h3 id="statTelegram" class="text-3xl font-black text-white mt-1">...</h3>
+            <p class="text-xs text-pink-300 font-bold uppercase">የትምህርት ክፍሎች</p>
+            <h3 id="statClasses" class="text-3xl font-black text-white mt-1">15</h3>
           </div>
           <div class="w-12 h-12 rounded-xl bg-pink-600/30 flex items-center justify-center text-2xl text-pink-300">
-            <i class="fab fa-telegram-plane"></i>
+            <i class="fas fa-school"></i>
           </div>
         </div>
 
-        <div class="glass-panel p-5 rounded-2xl border border-blue-500/30 bg-gradient-to-br from-blue-900/30 to-slate-950/40 flex items-center justify-between">
+        <div class="glass-panel p-5 rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-900/30 to-slate-950/40 flex items-center justify-between">
           <div>
-            <p class="text-xs text-blue-300 font-bold uppercase">የተላኩ መልእክቶች</p>
-            <h3 id="statMessages" class="text-3xl font-black text-white mt-1">...</h3>
+            <p class="text-xs text-emerald-300 font-bold uppercase">ንቁ ወላጆች</p>
+            <h3 id="statParents" class="text-3xl font-black text-white mt-1">...</h3>
           </div>
-          <div class="w-12 h-12 rounded-xl bg-blue-600/30 flex items-center justify-center text-2xl text-blue-300">
-            <i class="fas fa-envelope-open-text"></i>
+          <div class="w-12 h-12 rounded-xl bg-emerald-600/30 flex items-center justify-center text-2xl text-emerald-300">
+            <i class="fas fa-user-check"></i>
           </div>
-        </div>
-      </div>
-
-      <!-- Mass Broadcast -->
-      <div class="glass-panel p-6 rounded-2xl border border-pink-500/40">
-        <h3 class="text-base font-bold text-white mb-2 flex items-center gap-2">
-          <i class="fas fa-bullhorn text-pink-400"></i> አጠቃላይ ማስታወቂያ ማሰራጫ (Mass Broadcast)
-        </h3>
-        <div class="space-y-3">
-          <select id="broadcastGrade" class="w-full bg-slate-900 border border-pink-500/30 rounded-xl px-3 py-2 text-white text-xs">
-            <option value="ALL">📢 ለሁሉም የትምህርት ቤቱ ተማሪ ወላጆች (KG - 12)</option>
-            <option value="KG 1">KG 1 ብቻ</option>
-            <option value="KG 2">KG 2 ብቻ</option>
-            <option value="KG 3">KG 3 ብቻ</option>
-            <option value="Grade 1">Grade 1 ብቻ</option>
-            <option value="Grade 2">Grade 2 ብቻ</option>
-            <option value="Grade 3">Grade 3 ብቻ</option>
-            <option value="Grade 4">Grade 4 ብቻ</option>
-            <option value="Grade 5">Grade 5 ብቻ</option>
-            <option value="Grade 6">Grade 6 ብቻ</option>
-            <option value="Grade 7">Grade 7 ብቻ</option>
-            <option value="Grade 8">Grade 8 ብቻ</option>
-            <option value="Grade 9">Grade 9 ብቻ</option>
-            <option value="Grade 10">Grade 10 ብቻ</option>
-            <option value="Grade 11">Grade 11 ብቻ</option>
-            <option value="Grade 12">Grade 12 ብቻ</option>
-          </select>
-          <textarea id="broadcastText" rows="3" placeholder="የማስታወቂያውን ዝርዝር እዚህ ይፃፉ..." class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-3 text-white text-xs"></textarea>
-          <button onclick="sendBroadcast()" id="broadcastBtn" class="btn-3d-admin w-full py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs">
-            <i class="fas fa-paper-plane"></i> ማስታወቂያውን አሰራጭ (Send Broadcast)
-          </button>
-          <div id="broadcastStatus" class="text-center text-xs mt-2 font-bold"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Registration Modal with Canvas Compressor -->
+  <!-- Registration Modal for Teacher -->
   <div id="addModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
     <div class="glass-panel w-full max-w-lg p-5 rounded-2xl border border-purple-500/40 my-auto">
       <h2 class="text-base font-bold mb-3 text-white flex items-center gap-2">
@@ -259,13 +244,12 @@
       <form id="addStudentForm" onsubmit="submitStudent(event)" class="space-y-3 text-xs">
         <div class="flex flex-col items-center justify-center p-3 bg-slate-900/60 rounded-xl border border-purple-500/20">
           <img id="photoPreview" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-20 h-20 rounded-full object-cover avatar-3d mb-2">
-          <p id="compressionStatus" class="text-[10px] text-purple-300 mb-2"></p>
           <div class="flex gap-2">
-            <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="compressAndPreview(this)">
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="compressAndPreview(this, 'photoPreview')">
             <button type="button" onclick="document.getElementById('cameraInput').click()" class="btn-3d px-3 py-1.5 rounded-xl text-xs">
               <i class="fas fa-camera"></i> ፎቶ አንሳ
             </button>
-            <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="compressAndPreview(this)">
+            <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="compressAndPreview(this, 'photoPreview')">
             <button type="button" onclick="document.getElementById('galleryInput').click()" class="btn-3d-secondary px-3 py-1.5 rounded-xl text-xs text-purple-300">
               <i class="fas fa-images"></i> ጋለሪ
             </button>
@@ -305,6 +289,45 @@
     </div>
   </div>
 
+  <!-- Parent Self-Registration Modal -->
+  <div id="parentSelfRegModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div class="glass-panel w-full max-w-lg p-5 rounded-2xl border border-emerald-500/40 my-auto">
+      <h2 class="text-base font-bold mb-2 text-white flex items-center gap-2">
+        <i class="fas fa-user-plus text-emerald-400"></i> የወላጅ ራስ-ሰር ምዝገባ (Self-Registration)
+      </h2>
+      <p class="text-xs text-slate-300 mb-3">እባክዎ የልጅዎን እና የእርስዎን ትክክለኛ መረጃ ይሙሉ</p>
+      
+      <form id="parentRegForm" onsubmit="submitParentSelfReg(event)" class="space-y-3 text-xs">
+        <input type="text" id="pRegName" placeholder="የተማሪው ሙሉ ስም *" required class="w-full bg-slate-900 border border-emerald-500/30 rounded-xl p-2.5 text-white">
+        <div class="grid grid-cols-2 gap-2">
+          <select id="pRegGrade" required class="bg-slate-900 border border-emerald-500/30 rounded-xl p-2 text-white">
+            <option value="">ክፍል ምረጥ *</option>
+            <option value="KG 1">KG 1</option><option value="KG 2">KG 2</option><option value="KG 3">KG 3</option>
+            <option value="Grade 1">Grade 1</option><option value="Grade 2">Grade 2</option><option value="Grade 3">Grade 3</option>
+            <option value="Grade 4">Grade 4</option><option value="Grade 5">Grade 5</option><option value="Grade 6">Grade 6</option>
+            <option value="Grade 7">Grade 7</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option>
+            <option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option><option value="Grade 12">Grade 12</option>
+          </select>
+          <select id="pRegSection" required class="bg-slate-900 border border-emerald-500/30 rounded-xl p-2 text-white">
+            <option value="">ሴክሽን *</option>
+            <option value="A">Section A</option><option value="B">Section B</option>
+            <option value="C">Section C</option><option value="D">Section D</option><option value="E">Section E</option>
+          </select>
+        </div>
+        <input type="text" id="pRegParent" placeholder="የእርስዎ (የወላጅ) ሙሉ ስም *" required class="w-full bg-slate-900 border border-emerald-500/30 rounded-xl p-2.5 text-white">
+        <div class="grid grid-cols-2 gap-2">
+          <input type="tel" id="pRegPhone1" placeholder="ዋና ስልክ ቁጥር *" required class="bg-slate-900 border border-emerald-500/30 rounded-xl p-2 text-white">
+          <input type="tel" id="pRegPhone2" placeholder="ተጨማሪ ስልክ" class="bg-slate-900 border border-emerald-500/30 rounded-xl p-2 text-white">
+        </div>
+        
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('parentSelfRegModal')" class="btn-3d-secondary px-3 py-1.5 rounded-xl text-slate-300">ይቅር</button>
+          <button type="submit" id="parentRegBtn" class="btn-3d-parent px-5 py-1.5 rounded-xl">መዝግብ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Admin Login Modal -->
   <div id="adminLoginModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
     <div class="glass-panel w-full max-w-xs p-6 rounded-2xl text-center border border-pink-500/40">
@@ -329,7 +352,7 @@
   </footer>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyKI1JDUGbY9D4BacrEUri8mk8eoj5tskV6FN88MJafEce0qcSLpVDaEB3i1kYNFB602w/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyY25Tb_VPbpDSELF8GnBBh_iZXzEA0oYQ1Q-XL8MNotuj87yS4vjV7RJXz-bwsc5bC_Q/exec";
 
     let loadedStudents = [];
     let currentStudent = null;
@@ -338,14 +361,20 @@
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
+    // Switch between 3 views
     function switchView(role) {
-      if (role === 'admin') {
-        document.getElementById('teacherSection').classList.add('hidden');
+      document.getElementById('teacherSection').classList.add('hidden');
+      document.getElementById('adminSection').classList.add('hidden');
+      document.getElementById('parentSection').classList.add('hidden');
+
+      if (role === 'parent') {
+        document.getElementById('parentSection').classList.remove('hidden');
+        document.getElementById('roleTitle').innerText = "የወላጅ ፖርታል (Parent Portal)";
+      } else if (role === 'admin') {
         document.getElementById('adminSection').classList.remove('hidden');
         document.getElementById('roleTitle').innerText = "የአድሚን ዳሽቦርድ (Admin Command Center)";
         fetchAdminStats();
       } else {
-        document.getElementById('adminSection').classList.add('hidden');
         document.getElementById('teacherSection').classList.remove('hidden');
         document.getElementById('roleTitle').innerText = "የመምህሩ ዳሽቦርድ (Teacher Mode)";
       }
@@ -361,55 +390,144 @@
       } else { alert("የተሳሳተ የይለፍ ቃል!"); }
     }
 
-    function fetchAdminStats() {
-      fetch(`${SCRIPT_URL}?action=getAdminStats`)
+    // 🔍 Parent Portal Student Lookup
+    function parentLookup() {
+      const q = document.getElementById('parentSearchInput').value.trim();
+      const resContainer = document.getElementById('parentResultCard');
+      if (!q) return alert("እባክዎ የተማሪውን ID ወይም ስልክ ቁጥር ያስገቡ!");
+
+      resContainer.classList.remove('hidden');
+      resContainer.innerHTML = `<div class="p-6 text-center text-emerald-300"><i class="fas fa-spinner fa-spin text-2xl mb-2"></i><p>የልጅዎ መረጃ እየተፈለገ ነው...</p></div>`;
+
+      fetch(`${SCRIPT_URL}?action=parentLookup&query=${encodeURIComponent(q)}`)
         .then(res => res.json())
         .then(data => {
-          document.getElementById('statStudents').innerText = data.totalStudents || 0;
-          document.getElementById('statTelegram').innerText = data.telegramConnected || 0;
-          document.getElementById('statMessages').innerText = data.totalMessages || 0;
-        }).catch(e => {});
+          if (!data || data.length === 0) {
+            resContainer.innerHTML = `
+              <div class="text-center py-6 text-slate-300">
+                <i class="fas fa-exclamation-circle text-3xl text-amber-400 mb-2"></i>
+                <p class="font-bold">ይቅርታ! በዚህ መረጃ የተመዘገበ ተማሪ አልተገኘም።</p>
+                <p class="text-xs text-slate-400 mt-1">እባክዎ ከታች ያለውን "አዲስ ተማሪ መዝግብ" የሚለውን ተጭነው ይመዝገቡ።</p>
+              </div>`;
+            return;
+          }
+
+          const s = data[0];
+          resContainer.innerHTML = `
+            <div class="flex flex-col sm:flex-row items-center gap-5 pb-5 border-b border-emerald-500/20">
+              <img src="${s.photoUrl}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" class="w-24 h-24 rounded-2xl object-cover avatar-3d">
+              <div class="text-center sm:text-left space-y-1">
+                <span class="px-2.5 py-0.5 bg-emerald-900/60 border border-emerald-400/40 text-emerald-200 text-xs rounded-full font-bold">ID: ${s.id}</span>
+                <h2 class="text-xl font-bold text-white">${s.name}</h2>
+                <p class="text-xs text-emerald-300 font-bold">${s.grade} | ክፍል (Section): ${s.section}</p>
+                <p class="text-xs text-slate-300">ወላጅ፡ ${s.parentName} (${s.phone1})</p>
+              </div>
+            </div>
+
+            <!-- Daily Teacher Remark -->
+            <div class="my-4 p-4 rounded-xl bg-slate-900/80 border border-emerald-500/30">
+              <h4 class="text-xs font-bold text-emerald-300 uppercase mb-1"><i class="fas fa-clipboard-list mr-1"></i> የመምህሩ የዕለት ማስታወሻ / ውሎ</h4>
+              <p class="text-sm text-slate-200 font-semibold">${s.status}</p>
+            </div>
+
+            <!-- Direct Call / Message School -->
+            <div class="flex gap-2">
+              <a href="tel:+251913064239" class="btn-3d-parent flex-1 py-2 rounded-xl text-xs text-center flex items-center justify-center gap-1.5">
+                <i class="fas fa-phone-alt"></i> ትምህርት ቤቱን ይደውሉ
+              </a>
+            </div>
+          `;
+        })
+        .catch(err => {
+          resContainer.innerHTML = `<div class="text-red-400 text-center p-4">መረጃውን ማምጣት አልተቻለም።</div>`;
+        });
     }
 
-    // ⚡ Automatic Canvas Image Compression (< 80KB)
-    function compressAndPreview(input) {
-      if (input.files && input.files[0]) {
-        const file = input.files[0];
-        const status = document.getElementById('compressionStatus');
-        status.innerText = "ፎቶው ሳይዙ እየቀነሰ ነው...";
+    // 📝 Parent Self-Registration
+    function submitParentSelfReg(e) {
+      e.preventDefault();
+      const btn = document.getElementById('parentRegBtn');
+      btn.innerText = "እየተመዘገበ ነው...";
+      btn.disabled = true;
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const img = new Image();
-          img.onload = function() {
-            const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 400;
-            const MAX_HEIGHT = 400;
-            let width = img.width;
-            let height = img.height;
+      const studentData = {
+        name: document.getElementById('pRegName').value,
+        grade: document.getElementById('pRegGrade').value,
+        section: document.getElementById('pRegSection').value,
+        parentName: document.getElementById('pRegParent').value,
+        phone1: document.getElementById('pRegPhone1').value,
+        phone2: document.getElementById('pRegPhone2').value,
+        status: "በወላጅ ፖርታል የተመዘገበ"
+      };
 
-            if (width > height) {
-              if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-            } else {
-              if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-
-            // Compress to JPEG 0.7 quality (~50KB)
-            selectedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
-            document.getElementById('photoPreview').src = selectedImageBase64;
-            status.innerText = "✅ ፎቶው በተሳካ ሁኔታ ተጨመቀ!";
-          };
-          img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "parentSelfRegister", student: studentData })
+      })
+      .then(res => res.json())
+      .then(res => {
+        alert(res.message);
+        closeModal('parentSelfRegModal');
+        document.getElementById('parentRegForm').reset();
+        btn.innerText = "መዝግብ";
+        btn.disabled = false;
+        document.getElementById('parentSearchInput').value = res.id || studentData.phone1;
+        parentLookup();
+      });
     }
 
+    // ⚡ 1-Click Direct SMS & Telegram Sender
+    function sendDirectSMS() {
+      if (!currentStudent || !currentStudent.phone1) return alert("የወላጅ ስልክ ቁጥር የለም!");
+      const msg = document.getElementById('teacherRemarkText').value.trim();
+      if (!msg) return alert("እባክዎ መጀመሪያ ማስታወሻ ወይም መልእክት ይፃፉ!");
+
+      const fullMessage = `[የትምህርት ቤት ማስታወቂያ]\nስለ ተማሪ: ${currentStudent.name}\n${msg}`;
+      // Clean phone number
+      let phone = currentStudent.phone1.toString().replace(/\s+/g, '');
+      
+      // Open Phone Native SMS
+      window.open(`sms:${phone}?body=${encodeURIComponent(fullMessage)}`, '_blank');
+      
+      // Save remark to sheet
+      saveRemarkToSheet(fullMessage);
+    }
+
+    function sendDirectTelegram() {
+      const msg = document.getElementById('teacherRemarkText').value.trim();
+      if (!msg) return alert("እባክዎ መጀመሪያ መልእክት ይፃፉ!");
+
+      const fullMessage = `[የትምህርት ቤት መልእክት]\nተማሪ: ${currentStudent.name}\n${msg}`;
+      let phone = currentStudent.phone1.toString().replace(/\D/g, '');
+      if (phone.startsWith('0')) phone = '251' + phone.substring(1);
+      
+      // Direct Telegram share link
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(fullMessage)}`, '_blank');
+      saveRemarkToSheet(fullMessage);
+    }
+
+    function sendDirectWhatsApp() {
+      if (!currentStudent || !currentStudent.phone1) return alert("ስልክ ቁጥር የለም!");
+      const msg = document.getElementById('teacherRemarkText').value.trim();
+      if (!msg) return alert("እባክዎ መልእክት ይፃፉ!");
+
+      const fullMessage = `*የትምህርት ቤት መልእክት*\nተማሪ: *${currentStudent.name}*\n${msg}`;
+      let phone = currentStudent.phone1.toString().replace(/\D/g, '');
+      if (phone.startsWith('0')) phone = '251' + phone.substring(1);
+
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(fullMessage)}`, '_blank');
+      saveRemarkToSheet(fullMessage);
+    }
+
+    function saveRemarkToSheet(remarkText) {
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "updateRemarks", studentId: currentStudent.id, remarks: remarkText })
+      });
+      document.getElementById('currentRemarkDisplay').innerText = remarkText;
+    }
+
+    // Teacher View functions
     function performSearch() {
       const grade = document.getElementById('filterGrade').value;
       const section = document.getElementById('filterSection').value;
@@ -452,10 +570,6 @@
       currentStudent = loadedStudents[index];
       if (!currentStudent) return;
       const container = document.getElementById('profileCard');
-      
-      const tgStatus = currentStudent.chatId ? 
-        `<span class="text-green-400 text-[10px] font-bold"><i class="fas fa-check-circle"></i> ቴሌግራም ተገናኝቷል</span>` : 
-        `<span class="text-amber-400 text-[10px] font-bold"><i class="fas fa-exclamation-triangle"></i> ገና ቴሌግራም አልተገናኘም</span>`;
 
       container.innerHTML = `
         <div class="flex flex-col sm:flex-row items-center gap-4 pb-4 border-b border-purple-500/20">
@@ -464,52 +578,55 @@
             <span class="px-2 py-0.5 bg-purple-900/60 border border-purple-400/40 text-purple-200 text-[10px] rounded-full font-bold">ID: ${currentStudent.id}</span>
             <h2 class="text-lg font-bold text-white">${currentStudent.name}</h2>
             <p class="text-xs text-purple-300 font-semibold">${currentStudent.grade} | ክፍል: ${currentStudent.section}</p>
-            <p class="text-[11px] text-slate-300"><i class="fas fa-user-shield text-purple-400 mr-1"></i> ወላጅ፡ ${currentStudent.parentName} (${currentStudent.phone1})</p>
-            <div>${tgStatus}</div>
+            <p class="text-[11px] text-slate-300"><i class="fas fa-phone-alt text-purple-400 mr-1"></i> ወላጅ፡ ${currentStudent.parentName} (${currentStudent.phone1})</p>
           </div>
         </div>
 
         <div class="my-4 p-3 rounded-xl bg-slate-900/60 border border-purple-500/20">
-          <label class="block text-[10px] font-bold text-purple-300 uppercase mb-1">ስለ ልጁ ጠቅላላ ሁኔታ</label>
-          <p class="text-xs text-slate-200">${currentStudent.status}</p>
+          <label class="block text-[10px] font-bold text-purple-300 uppercase mb-1">የአሁኑ ጠቅላላ ሁኔታ / ማስታወሻ</label>
+          <p id="currentRemarkDisplay" class="text-xs text-slate-200">${currentStudent.status}</p>
         </div>
 
+        <!-- 1-Click Message Action Box -->
         <div class="space-y-2">
-          <label class="block text-[10px] font-bold text-purple-300 uppercase">ለወላጅ በቴሌግራም መልእክት መላኪያ</label>
-          <textarea id="tgMessageText" rows="2" placeholder="የዛሬ ውሎ ወይም ውጤት እዚህ ይፃፉ..." class="w-full bg-slate-900/90 border border-purple-500/30 rounded-xl p-2.5 text-white text-xs"></textarea>
-          <button onclick="sendDirectMessage()" class="btn-3d w-full py-2.5 rounded-xl flex justify-center items-center gap-2 text-xs">
-            <i class="fab fa-telegram-plane text-sm"></i> መልእክት ላክ (Send)
-          </button>
-          <div id="msgStatus" class="text-center text-xs mt-1"></div>
+          <label class="block text-[10px] font-bold text-purple-300 uppercase">አዲስ ማስታወሻ ወይም መልእክት ይፃፉ</label>
+          <textarea id="teacherRemarkText" rows="2" placeholder="የዛሬ ውሎ፣ የፈተና ውጤት ወይም ማሳሰቢያ እዚህ ይፃፉ..." class="w-full bg-slate-900/90 border border-purple-500/30 rounded-xl p-2.5 text-white text-xs"></textarea>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+            <button onclick="sendDirectSMS()" class="btn-3d-secondary py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 text-amber-300">
+              <i class="fas fa-sms text-base"></i> በ SMS ላክ
+            </button>
+            <button onclick="sendDirectTelegram()" class="btn-3d py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5">
+              <i class="fab fa-telegram-plane text-base"></i> በ Telegram
+            </button>
+            <button onclick="sendDirectWhatsApp()" class="btn-3d-parent py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5">
+              <i class="fab fa-whatsapp text-base"></i> በ WhatsApp
+            </button>
+          </div>
         </div>
       `;
     }
 
-    function sendDirectMessage() {
-      if (!currentStudent) return alert("እባክዎ መጀመሪያ ተማሪ ይምረጡ!");
-      const msg = document.getElementById('tgMessageText').value;
-      const statusDiv = document.getElementById('msgStatus');
-      if (!msg.trim()) return alert("እባክዎ መጀመሪያ መልእክት ይፃፉ!");
-      
-      statusDiv.innerHTML = `<span class="text-purple-300"><i class="fas fa-spinner fa-spin"></i> እየተላከ ነው...</span>`;
-      
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({
-          action: "sendMessage",
-          chatId: currentStudent.chatId,
-          message: `<b>[የትምህርት ቤት መልእክት]</b>\nተማሪ: <b>${currentStudent.name}</b>\n\n${msg}`
-        })
-      })
-      .then(res => res.json())
-      .then(res => {
-        if(res.success) {
-          statusDiv.innerHTML = `<span class="text-green-400 font-bold"><i class="fas fa-check-circle"></i> ተልኳል!</span>`;
-          document.getElementById('tgMessageText').value = "";
-        } else {
-          statusDiv.innerHTML = `<span class="text-red-400 font-bold">አልተላከም: ${res.error}</span>`;
-        }
-      });
+    function compressAndPreview(input, targetId) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const MAX = 400;
+            let w = img.width, h = img.height;
+            if (w > h) { if (w > MAX) { h *= MAX/w; w = MAX; } }
+            else { if (h > MAX) { w *= MAX/h; h = MAX; } }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            selectedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+            document.getElementById(targetId).src = selectedImageBase64;
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
     }
 
     function submitStudent(e) {
@@ -541,11 +658,19 @@
         document.getElementById('addStudentForm').reset();
         document.getElementById('photoPreview').src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
         selectedImageBase64 = "";
-        document.getElementById('compressionStatus').innerText = "";
         saveBtn.innerText = "መዝግብ";
         saveBtn.disabled = false;
         performSearch();
       });
+    }
+
+    function fetchAdminStats() {
+      fetch(`${SCRIPT_URL}?action=getAdminStats`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('statStudents').innerText = data.totalStudents || 0;
+          document.getElementById('statParents').innerText = data.activeParents || 0;
+        });
     }
   </script>
 </body>
