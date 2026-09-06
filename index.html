@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart School Comm-Book | Mela Solution</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   
   <style>
@@ -40,15 +39,10 @@
       background: linear-gradient(135deg, #ec4899, #be185d);
       box-shadow: 0 6px 0 #831843, 0 10px 20px rgba(236, 72, 153, 0.4);
       color: white;
-      font-weight: bold;
     }
     .btn-3d-admin:active { transform: translateY(4px); box-shadow: 0 2px 0 #831843; }
-    .btn-3d-ad {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      box-shadow: 0 6px 0 #92400e, 0 10px 20px rgba(217, 119, 6, 0.4);
-    }
     .avatar-3d {
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
       border: 3px solid #8b5cf6;
     }
   </style>
@@ -56,72 +50,51 @@
 <body class="p-3 md:p-8 flex flex-col justify-between min-h-screen">
 
   <div>
-    <!-- Navigation -->
-    <header class="max-w-7xl mx-auto flex flex-wrap justify-between items-center mb-6 glass-panel p-4 md:p-5 rounded-2xl">
+    <!-- Header -->
+    <header class="max-w-7xl mx-auto flex flex-wrap justify-between items-center mb-6 glass-panel p-4 rounded-2xl">
       <div class="flex items-center space-x-3">
         <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-2xl shadow-lg">
           <i class="fas fa-graduation-cap text-white"></i>
         </div>
         <div>
           <h1 class="text-xl md:text-2xl font-black tracking-wide text-white">Smart Comm-Book</h1>
-          <p id="roleTitle" class="text-xs text-purple-300">የመምህሩ ዳሽቦርድ</p>
+          <p id="roleTitle" class="text-xs text-purple-300">የመምህሩ ዳሽቦርድ (KG - Grade 12)</p>
         </div>
       </div>
       
       <div class="flex space-x-2 mt-4 md:mt-0">
-        <button id="btnTeacherView" onclick="switchView('teacher')" class="btn-3d px-3 py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5">
+        <button id="btnTeacherView" onclick="switchView('teacher')" class="btn-3d px-3 py-2 rounded-xl text-xs flex items-center gap-1.5">
           <i class="fas fa-chalkboard-teacher"></i> የመምህር ገጽ
         </button>
-        <button id="btnAdminView" onclick="promptAdminLogin()" class="btn-3d-secondary px-3 py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 text-pink-400">
+        <button id="btnAdminView" onclick="promptAdminLogin()" class="btn-3d-secondary px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 text-pink-400">
           <i class="fas fa-user-shield"></i> አድሚን ገጽ
         </button>
       </div>
     </header>
-
-    <!-- Sponsored Banner -->
-    <section class="max-w-7xl mx-auto mb-6">
-      <div class="glass-panel p-4 rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-950/40 via-purple-950/40 to-slate-950/60 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="flex items-center space-x-3 text-center md:text-left">
-          <span class="px-2.5 py-1 bg-amber-500 text-slate-950 font-black text-[10px] rounded-lg uppercase">ማስታወቂያ</span>
-          <div>
-            <h3 class="font-bold text-amber-200 text-sm md:text-base">የድርጅትዎን ማስታወቂያ እዚህ ያስተዋውቁ!</h3>
-            <p class="text-xs text-slate-300">በሺዎች ለሚቆጠሩ ወላጆች እና መምህራን ተደራሽ ይሁኑ።</p>
-          </div>
-        </div>
-        <a href="tel:+251913064239" class="btn-3d-ad px-4 py-2 rounded-xl text-xs font-bold text-slate-950 flex items-center gap-1.5 whitespace-nowrap">
-          <i class="fas fa-bullhorn"></i> ማስታወቂያ ለማስነገር ይደውሉ
-        </a>
-      </div>
-    </section>
 
     <!-- Teacher Section -->
     <div id="teacherSection">
       <main class="max-w-7xl mx-auto">
         <div class="glass-panel p-4 md:p-6 rounded-2xl mb-6">
           <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold text-sm text-purple-200"><i class="fas fa-search mr-1"></i> ተማሪዎችን በክፍል እና ሴክሽን ፈልግ</h3>
-            <div class="flex space-x-2">
-              <button onclick="openModal('addModal')" class="btn-3d px-3 py-1.5 rounded-xl text-xs flex items-center gap-1">
-                <i class="fas fa-camera"></i> አዲስ ተማሪ + ፎቶ
-              </button>
-              <button onclick="openModal('uploadModal')" class="btn-3d-secondary px-3 py-1.5 rounded-xl text-xs text-purple-300 flex items-center gap-1">
-                <i class="fas fa-file-excel text-green-400"></i> Excel
-              </button>
-            </div>
+            <h3 class="font-bold text-sm text-purple-200"><i class="fas fa-search mr-1"></i> ተማሪዎችን ፈልግ</h3>
+            <button onclick="openModal('addModal')" class="btn-3d px-3 py-1.5 rounded-xl text-xs flex items-center gap-1">
+              <i class="fas fa-camera"></i> አዲስ ተማሪ + ፎቶ
+            </button>
           </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4">
-            <!-- Grades KG to 12 -->
+          
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <!-- Full KG to 12 Dropdown -->
             <div>
               <label class="block text-xs text-purple-300 mb-1 font-semibold">ክፍል (Grade)</label>
-              <select id="filterGrade" class="w-full bg-slate-900/80 border border-purple-500/30 rounded-xl px-3 py-2 text-white text-xs">
-                <option value="ALL">ሁሉም ክፍሎች (KG - 12)</option>
-                <optgroup label="🌱 KG ደረጃ">
+              <select id="filterGrade" class="w-full bg-slate-900 border border-purple-500/30 rounded-xl px-3 py-2 text-white text-xs">
+                <option value="ALL">ሁሉም ክፍሎች (All)</option>
+                <optgroup label="Kindergarten (KG)">
                   <option value="KG 1">KG 1</option>
                   <option value="KG 2">KG 2</option>
                   <option value="KG 3">KG 3</option>
                 </optgroup>
-                <optgroup label="📚 የመጀመሪያ ደረጃ (Grade 1 - 8)">
+                <optgroup label="Primary (1-8)">
                   <option value="Grade 1">Grade 1</option>
                   <option value="Grade 2">Grade 2</option>
                   <option value="Grade 3">Grade 3</option>
@@ -131,7 +104,7 @@
                   <option value="Grade 7">Grade 7</option>
                   <option value="Grade 8">Grade 8</option>
                 </optgroup>
-                <optgroup label="🎓 ሁለተኛ ደረጃ (Grade 9 - 12)">
+                <optgroup label="High School (9-12)">
                   <option value="Grade 9">Grade 9</option>
                   <option value="Grade 10">Grade 10</option>
                   <option value="Grade 11">Grade 11</option>
@@ -140,39 +113,38 @@
               </select>
             </div>
 
-            <!-- Dynamic Open Section -->
             <div>
-              <label class="block text-xs text-purple-300 mb-1 font-semibold">ሴክሽን (ማንኛውም ፊደል/ቁጥር)</label>
-              <input type="text" id="filterSection" placeholder="e.g. A, B, Red, 1..." class="w-full bg-slate-900/80 border border-purple-500/30 rounded-xl px-3 py-2 text-white text-xs">
+              <label class="block text-xs text-purple-300 mb-1 font-semibold">ሴክሽን (Section)</label>
+              <select id="filterSection" class="w-full bg-slate-900 border border-purple-500/30 rounded-xl px-3 py-2 text-white text-xs">
+                <option value="ALL">ሁሉም ሴክሽን</option>
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+                <option value="C">Section C</option>
+                <option value="D">Section D</option>
+                <option value="E">Section E</option>
+              </select>
             </div>
 
             <div>
               <label class="block text-xs text-purple-300 mb-1 font-semibold">የተማሪ ስም ወይም ID</label>
-              <input type="text" id="filterSearch" placeholder="ስም ወይም ID ፃፍ..." class="w-full bg-slate-900/80 border border-purple-500/30 rounded-xl px-3 py-2 text-white text-xs">
+              <input type="text" id="filterSearch" placeholder="ስም ወይም ID..." class="w-full bg-slate-900 border border-purple-500/30 rounded-xl px-3 py-2 text-white text-xs">
             </div>
 
             <div class="flex items-end">
               <button onclick="performSearch()" class="btn-3d w-full py-2 rounded-xl flex justify-center items-center gap-2 text-xs">
-                <i class="fas fa-search"></i> ፈልግ (Search)
+                <i class="fas fa-search"></i> ፈልግ
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Results Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div class="lg:col-span-1 space-y-3" id="studentsList">
-            <div class="text-center py-12 text-slate-400 glass-panel rounded-2xl">
-              <i class="fas fa-search text-3xl mb-2 text-purple-400 opacity-50"></i>
-              <p class="text-sm">ተማሪዎችን ለማየት ፍለጋ ያድርጉ</p>
-            </div>
+            <div class="text-center py-12 text-slate-400 glass-panel rounded-2xl text-xs">ተማሪዎችን ለማየት ፍለጋ ያድርጉ</div>
           </div>
 
           <div class="lg:col-span-2 glass-panel p-4 md:p-6 rounded-2xl" id="profileCard">
-            <div class="text-center py-16 text-slate-400">
-              <i class="fas fa-id-card text-5xl mb-3 text-purple-500 opacity-40"></i>
-              <p class="text-sm md:text-base">ዝርዝር መረጃ ለማየት ከተማሪዎች ዝርዝር ውስጥ አንዱን ይምረጡ</p>
-            </div>
+            <div class="text-center py-16 text-slate-400 text-sm">ዝርዝር መረጃ ለማየት ከተማሪዎች ዝርዝር ውስጥ አንዱን ይምረጡ</div>
           </div>
         </div>
       </main>
@@ -180,43 +152,72 @@
 
     <!-- Admin Section -->
     <div id="adminSection" class="hidden max-w-7xl mx-auto space-y-6">
-      
-      <!-- Stats -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="glass-panel p-5 rounded-2xl border border-purple-500/30 flex items-center justify-between">
+        <div class="glass-panel p-5 rounded-2xl border border-purple-500/30 flex justify-between items-center">
           <div>
             <p class="text-xs text-purple-300 font-bold">ጠቅላላ ተማሪዎች</p>
-            <h3 id="statStudents" class="text-3xl font-black text-white mt-1">...</h3>
+            <h3 id="statStudents" class="text-2xl font-black text-white mt-1">...</h3>
           </div>
-          <i class="fas fa-users text-3xl text-purple-400"></i>
+          <i class="fas fa-users text-2xl text-purple-400"></i>
         </div>
 
-        <div class="glass-panel p-5 rounded-2xl border border-pink-500/30 flex items-center justify-between">
+        <div class="glass-panel p-5 rounded-2xl border border-pink-500/30 flex justify-between items-center">
           <div>
             <p class="text-xs text-pink-300 font-bold">ቴሌግራም የተገናኙ</p>
-            <h3 id="statTelegram" class="text-3xl font-black text-white mt-1">...</h3>
+            <h3 id="statTelegram" class="text-2xl font-black text-white mt-1">...</h3>
           </div>
-          <i class="fab fa-telegram-plane text-3xl text-pink-400"></i>
+          <i class="fab fa-telegram text-2xl text-pink-400"></i>
         </div>
 
-        <div class="glass-panel p-5 rounded-2xl border border-blue-500/30 flex items-center justify-between">
+        <div class="glass-panel p-5 rounded-2xl border border-blue-500/30 flex justify-between items-center">
           <div>
             <p class="text-xs text-blue-300 font-bold">የተላኩ መልእክቶች</p>
-            <h3 id="statMessages" class="text-3xl font-black text-white mt-1">...</h3>
+            <h3 id="statMessages" class="text-2xl font-black text-white mt-1">...</h3>
           </div>
-          <i class="fas fa-envelope-open-text text-3xl text-blue-400"></i>
+          <i class="fas fa-envelope text-2xl text-blue-400"></i>
         </div>
       </div>
 
-      <!-- 🔗 Teacher Link Generator (ለመምህራን የተናጠል ሊንክ ማመንጫ) -->
-      <div class="glass-panel p-6 rounded-2xl border border-purple-500/40">
-        <h3 class="text-base font-bold text-white mb-2 flex items-center gap-2">
-          <i class="fas fa-link text-purple-400"></i> የክፍል መምህራን መግቢያ ሊንክ ማመንጫ
-        </h3>
-        <p class="text-xs text-slate-300 mb-4">መምህሩ የራሱን ክፍል ብቻ እንዲያይ የክፍል ደረጃ እና ሴክሽን መርጠህ ሊንኩን ስጠው።</p>
+      <!-- Broadcast -->
+      <div class="glass-panel p-6 rounded-2xl border border-pink-500/40">
+        <h3 class="text-base font-bold text-white mb-2"><i class="fas fa-bullhorn text-pink-400 mr-1"></i> አጠቃላይ ማስታወቂያ ማሰራጫ</h3>
+        <textarea id="broadcastText" rows="3" placeholder="የማስታወቂያውን ዝርዝር እዚህ ይፃፉ..." class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-3 text-white text-xs mb-3"></textarea>
+        <button onclick="sendBroadcast()" id="broadcastBtn" class="btn-3d-admin w-full py-2.5 rounded-xl text-xs font-bold">
+          <i class="fas fa-paper-plane mr-1"></i> ለሁሉም ወላጆች አሰራጭ
+        </button>
+        <div id="broadcastStatus" class="text-center text-xs mt-2 font-bold"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Registration Modal with Auto-Compressor -->
+  <div id="addModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div class="glass-panel w-full max-w-lg p-5 rounded-2xl border border-purple-500/40 my-auto">
+      <h2 class="text-base font-bold mb-3 text-white flex items-center gap-2">
+        <i class="fas fa-camera text-purple-400"></i> አዲስ ተማሪ + ፎቶ ማንሻ
+      </h2>
+      <form id="addStudentForm" onsubmit="submitStudent(event)" class="space-y-3 text-xs">
+        <div class="flex flex-col items-center justify-center p-3 bg-slate-900/60 rounded-xl border border-purple-500/20">
+          <img id="photoPreview" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-20 h-20 rounded-full object-cover avatar-3d mb-2">
+          <span id="compressStatus" class="text-[10px] text-green-400 mb-2"></span>
+          <div class="flex gap-2">
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="processAndCompressImage(this)">
+            <button type="button" onclick="document.getElementById('cameraInput').click()" class="btn-3d px-3 py-1.5 rounded-xl text-xs">
+              <i class="fas fa-camera"></i> ፎቶ አንሳ
+            </button>
+            <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="processAndCompressImage(this)">
+            <button type="button" onclick="document.getElementById('galleryInput').click()" class="btn-3d-secondary px-3 py-1.5 rounded-xl text-xs text-purple-300">
+              <i class="fas fa-images"></i> ጋለሪ
+            </button>
+          </div>
+        </div>
         
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <select id="genGrade" class="bg-slate-900 border border-purple-500/30 rounded-xl p-2.5 text-white text-xs">
+        <input type="text" id="regId" placeholder="የት/ቤት ተማሪ ID *" required class="w-full bg-slate-900 border border-purple-500/30 rounded-xl p-2 text-white">
+        <input type="text" id="regName" placeholder="የተማሪ ሙሉ ስም *" required class="w-full bg-slate-900 border border-purple-500/30 rounded-xl p-2 text-white">
+        
+        <div class="grid grid-cols-2 gap-2">
+          <select id="regGrade" required class="bg-slate-900 border border-purple-500/30 rounded-xl p-2 text-white">
+            <option value="">ክፍል ምረጥ *</option>
             <option value="KG 1">KG 1</option>
             <option value="KG 2">KG 2</option>
             <option value="KG 3">KG 3</option>
@@ -233,157 +234,55 @@
             <option value="Grade 11">Grade 11</option>
             <option value="Grade 12">Grade 12</option>
           </select>
-          <input type="text" id="genSec" placeholder="ሴክሽን ፃፍ (e.g. A, B, Red)..." class="bg-slate-900 border border-purple-500/30 rounded-xl p-2.5 text-white text-xs">
-          <button onclick="generateTeacherLink()" class="btn-3d py-2 rounded-xl text-xs flex items-center justify-center gap-1">
-            <i class="fas fa-magic"></i> ሊንኩን አመንጭ
-          </button>
-        </div>
-        <div id="generatedLinkBox" class="hidden mt-3 p-3 bg-slate-900/90 rounded-xl border border-purple-400 flex items-center justify-between">
-          <span id="genLinkText" class="text-xs text-purple-200 truncate select-all"></span>
-          <button onclick="copyGeneratedLink()" class="btn-3d px-3 py-1 text-xs ml-2">Copy</button>
-        </div>
-      </div>
-
-      <!-- Mass Broadcast -->
-      <div class="glass-panel p-6 rounded-2xl border border-pink-500/40">
-        <h3 class="text-base font-bold text-white mb-2 flex items-center gap-2">
-          <i class="fas fa-bullhorn text-pink-400"></i> አጠቃላይ ማስታወቂያ ማሰራጫ (Mass Broadcast)
-        </h3>
-        <div class="space-y-3">
-          <select id="broadcastGrade" class="w-full bg-slate-900 border border-pink-500/30 rounded-xl px-3 py-2 text-white text-xs">
-            <option value="ALL">📢 ለሁሉም ክፍሎች (KG - 12)</option>
-            <option value="KG 1">KG 1 ብቻ</option>
-            <option value="KG 2">KG 2 ብቻ</option>
-            <option value="KG 3">KG 3 ብቻ</option>
-            <option value="Grade 1">Grade 1 ብቻ</option>
-            <option value="Grade 2">Grade 2 ብቻ</option>
-            <option value="Grade 3">Grade 3 ብቻ</option>
-            <option value="Grade 4">Grade 4 ብቻ</option>
-            <option value="Grade 5">Grade 5 ብቻ</option>
-            <option value="Grade 6">Grade 6 ብቻ</option>
-            <option value="Grade 7">Grade 7 ብቻ</option>
-            <option value="Grade 8">Grade 8 ብቻ</option>
-            <option value="Grade 9">Grade 9 ብቻ</option>
-            <option value="Grade 10">Grade 10 ብቻ</option>
-            <option value="Grade 11">Grade 11 ብቻ</option>
-            <option value="Grade 12">Grade 12 ብቻ</option>
+          <select id="regSection" required class="bg-slate-900 border border-purple-500/30 rounded-xl p-2 text-white">
+            <option value="A">Section A</option>
+            <option value="B">Section B</option>
+            <option value="C">Section C</option>
+            <option value="D">Section D</option>
+            <option value="E">Section E</option>
           </select>
-          <textarea id="broadcastText" rows="3" placeholder="የማስታወቂያውን ዝርዝር እዚህ ይፃፉ..." class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-3 text-white text-xs"></textarea>
-          <button onclick="sendBroadcast()" id="broadcastBtn" class="btn-3d-admin w-full py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs">
-            <i class="fas fa-paper-plane"></i> ማስታወቂያውን አሰራጭ
-          </button>
-          <div id="broadcastStatus" class="text-center text-xs mt-2 font-bold"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Registration Modal with Auto-Compressor -->
-  <div id="addModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
-    <div class="glass-panel w-full max-w-lg p-5 rounded-2xl border border-purple-500/40 my-auto">
-      <h2 class="text-lg font-bold mb-3 text-white flex items-center gap-2">
-        <i class="fas fa-camera text-purple-400"></i> አዲስ ተማሪ + ፎቶ
-      </h2>
-      <form id="addStudentForm" onsubmit="submitStudent(event)" class="space-y-3 text-xs md:text-sm">
-        
-        <!-- Photo Compression Preview -->
-        <div class="flex flex-col items-center justify-center p-3 bg-slate-900/60 rounded-xl border border-purple-500/20">
-          <img id="photoPreview" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-20 h-20 rounded-full object-cover avatar-3d mb-2">
-          <span id="compressBadge" class="text-[10px] text-green-400 font-bold mb-2 hidden"><i class="fas fa-check"></i> ፎቶው ወደ KB አነሰ</span>
-          
-          <div class="flex gap-2">
-            <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageFile(this)">
-            <button type="button" onclick="document.getElementById('cameraInput').click()" class="btn-3d px-3 py-1.5 rounded-xl text-xs">
-              <i class="fas fa-camera"></i> ካሜራ
-            </button>
-            <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="handleImageFile(this)">
-            <button type="button" onclick="document.getElementById('galleryInput').click()" class="btn-3d-secondary px-3 py-1.5 rounded-xl text-xs text-purple-300">
-              <i class="fas fa-images"></i> ጋለሪ
-            </button>
-          </div>
         </div>
 
-        <input type="text" id="regId" placeholder="የት/ቤት ተማሪ ID *" required class="w-full bg-slate-900 border border-purple-500/30 rounded-xl p-2.5 text-white">
-        <input type="text" id="regName" placeholder="የተማሪ ሙሉ ስም *" required class="w-full bg-slate-900 border border-purple-500/30 rounded-xl p-2.5 text-white">
-        
+        <input type="text" id="regParent" placeholder="የወላጅ ሙሉ ስም *" required class="w-full bg-slate-900 border border-purple-500/30 rounded-xl p-2 text-white">
         <div class="grid grid-cols-2 gap-2">
-          <select id="regGrade" required class="bg-slate-900 border border-purple-500/30 rounded-xl p-2.5 text-white text-xs">
-            <option value="KG 1">KG 1</option><option value="KG 2">KG 2</option><option value="KG 3">KG 3</option>
-            <option value="Grade 1">Grade 1</option><option value="Grade 2">Grade 2</option><option value="Grade 3">Grade 3</option>
-            <option value="Grade 4">Grade 4</option><option value="Grade 5">Grade 5</option><option value="Grade 6">Grade 6</option>
-            <option value="Grade 7">Grade 7</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option>
-            <option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option><option value="Grade 12">Grade 12</option>
-          </select>
-          <input type="text" id="regSection" placeholder="ሴክሽን (e.g. A, B, 1, Red) *" required class="bg-slate-900 border border-purple-500/30 rounded-xl p-2.5 text-white text-xs">
+          <input type="tel" id="regPhone1" placeholder="ዋና ስልክ *" required class="bg-slate-900 border border-purple-500/30 rounded-xl p-2 text-white">
+          <input type="tel" id="regPhone2" placeholder="ተጨማሪ ስልክ" class="bg-slate-900 border border-purple-500/30 rounded-xl p-2 text-white">
         </div>
-
-        <input type="text" id="regParent" placeholder="የወላጅ ሙሉ ስም *" required class="w-full bg-slate-900 border border-purple-500/30 rounded-xl p-2.5 text-white">
-        <div class="grid grid-cols-2 gap-2">
-          <input type="tel" id="regPhone1" placeholder="ዋና ስልክ ቁጥር *" required class="bg-slate-900 border border-purple-500/30 rounded-xl p-2.5 text-white">
-          <input type="tel" id="regPhone2" placeholder="ተጨማሪ ስልክ" class="bg-slate-900 border border-purple-500/30 rounded-xl p-2.5 text-white">
-        </div>
-
-        <textarea id="regStatus" placeholder="ጠቅላላ ሁኔታ / ማስታወሻ..." class="w-full bg-slate-900 border border-purple-500/30 rounded-xl p-2.5 text-white h-16"></textarea>
+        
+        <textarea id="regStatus" placeholder="ጠቅላላ ሁኔታ / ማስታወሻ..." class="w-full bg-slate-900 border border-purple-500/30 rounded-xl p-2 text-white h-14"></textarea>
         
         <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeModal('addModal')" class="btn-3d-secondary px-4 py-2 rounded-xl text-slate-300 text-xs">ይቅር</button>
-          <button type="submit" id="saveStudentBtn" class="btn-3d px-5 py-2 rounded-xl text-xs">መዝግብ</button>
+          <button type="button" onclick="closeModal('addModal')" class="btn-3d-secondary px-4 py-1.5 rounded-xl text-slate-300">ይቅር</button>
+          <button type="submit" id="saveStudentBtn" class="btn-3d px-5 py-1.5 rounded-xl">መዝግብ</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Admin Login Modal -->
+  <!-- Admin Modal -->
   <div id="adminLoginModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
-    <div class="glass-panel w-full max-w-xs p-6 rounded-2xl text-center border border-pink-500/40">
-      <i class="fas fa-lock text-4xl text-pink-400 mb-3"></i>
-      <h3 class="text-lg font-bold text-white mb-1">የአድሚን መግቢያ</h3>
-      <input type="password" id="adminPinInput" placeholder="admin123" class="w-full bg-slate-900 border border-pink-500/40 rounded-xl p-2.5 text-center text-white mb-3">
+    <div class="glass-panel w-full max-w-xs p-5 rounded-2xl text-center border border-pink-500/40">
+      <i class="fas fa-lock text-3xl text-pink-400 mb-2"></i>
+      <h3 class="text-base font-bold text-white mb-2">የአድሚን መግቢያ</h3>
+      <input type="password" id="adminPinInput" placeholder="admin123" class="w-full bg-slate-900 border border-pink-500/40 rounded-xl p-2 text-center text-white mb-3">
       <div class="flex gap-2">
-        <button onclick="closeModal('adminLoginModal')" class="btn-3d-secondary w-1/2 py-2 rounded-xl text-xs">ይቅር</button>
-        <button onclick="checkAdminPin()" class="btn-3d-admin w-1/2 py-2 rounded-xl text-xs">ግባ</button>
+        <button onclick="closeModal('adminLoginModal')" class="btn-3d-secondary w-1/2 py-1.5 rounded-xl text-xs">ይቅር</button>
+        <button onclick="checkAdminPin()" class="btn-3d-admin w-1/2 py-1.5 rounded-xl text-xs">ግባ</button>
       </div>
     </div>
   </div>
 
   <!-- Footer -->
-  <footer class="max-w-7xl mx-auto w-full mt-10 mb-2 glass-panel p-4 rounded-2xl border border-purple-500/20 text-center">
-    <p class="text-xs md:text-sm font-bold text-purple-300">
-      Developed with ❤️ by <span class="text-white tracking-wider font-black">Mela Solution</span>
-    </p>
-    <div class="flex justify-center items-center gap-4 mt-2 text-xs text-slate-300">
-      <a href="tel:+251913064239"><i class="fas fa-phone-alt text-purple-400 mr-1"></i> +251 913 064 239</a>
-      <span>|</span>
-      <a href="tel:+251703064239"><i class="fas fa-phone-alt text-purple-400 mr-1"></i> +251 703 064 239</a>
-    </div>
+  <footer class="max-w-7xl mx-auto w-full mt-8 mb-2 glass-panel p-3 rounded-2xl text-center text-xs">
+    <p class="font-bold text-purple-300">Mela Solution 🚀 | <a href="tel:+251913064239">+251 913 064 239</a> | <a href="tel:+251703064239">+251 703 064 239</a></p>
   </footer>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZiyW8k44ISetqpVuvKvz0iaclXQ1d3pWq55AdCD-PTaRq9CnGBSoZvVAOoWP2vqi-Gw/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyY25Tb_VPbpDSELF8GnBBh_iZXzEA0oYQ1Q-XL8MNotuj87yS4vjV7RJXz-bwsc5bC_Q/exec";
 
     let loadedStudents = [];
     let currentStudent = null;
     let selectedImageBase64 = "";
-
-    // 🔗 URL Parameter Checker (መምህሩ በራሱ ክፍል ሊንክ ከገባ)
-    window.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const lockedGrade = urlParams.get('grade');
-      const lockedSec = urlParams.get('sec');
-      
-      if (lockedGrade) {
-        document.getElementById('filterGrade').value = lockedGrade;
-        document.getElementById('filterGrade').disabled = true;
-      }
-      if (lockedSec) {
-        document.getElementById('filterSection').value = lockedSec;
-        document.getElementById('filterSection').disabled = true;
-      }
-      if (lockedGrade || lockedSec) {
-        document.getElementById('roleTitle').innerText = `${lockedGrade || ''} ${lockedSec ? 'ሴክሽን ' + lockedSec : ''} መምህር ገጽ`;
-        performSearch();
-      }
-    });
 
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
@@ -392,12 +291,12 @@
       if (role === 'admin') {
         document.getElementById('teacherSection').classList.add('hidden');
         document.getElementById('adminSection').classList.remove('hidden');
-        document.getElementById('roleTitle').innerText = "የአድሚን ዳሽቦርድ (Admin Command Center)";
+        document.getElementById('roleTitle').innerText = "የአድሚን ዳሽቦርድ (Admin Mode)";
         fetchAdminStats();
       } else {
         document.getElementById('adminSection').classList.add('hidden');
         document.getElementById('teacherSection').classList.remove('hidden');
-        document.getElementById('roleTitle').innerText = "የመምህሩ ዳሽቦርድ";
+        document.getElementById('roleTitle').innerText = "የመምህሩ ዳሽቦርድ (KG - Grade 12)";
       }
     }
 
@@ -413,53 +312,44 @@
       }
     }
 
-    // 📸 Auto-Image Compression Engine (Canvas < 80KB)
-    function handleImageFile(input) {
+    // 🌟 AUTOMATIC IMAGE COMPRESSOR (< 80KB) 🌟
+    function processAndCompressImage(input) {
       if (input.files && input.files[0]) {
         const file = input.files[0];
+        const statusSpan = document.getElementById('compressStatus');
+        statusSpan.innerText = "ፎቶው እየቀነሰ ነው...";
+
         const reader = new FileReader();
         reader.onload = function(e) {
           const img = new Image();
           img.onload = function() {
             const canvas = document.createElement('canvas');
-            const maxWidth = 500;
             let width = img.width;
             let height = img.height;
-            if (width > maxWidth) {
-              height = Math.round((height * maxWidth) / width);
-              width = maxWidth;
+            const maxDim = 500; // 500px max width/height
+
+            if (width > height && width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
             }
+
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
-            
-            // Compress to JPEG 70% quality (~60KB)
+
+            // Compress to JPEG with 70% quality (~40KB - 70KB)
             selectedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
             document.getElementById('photoPreview').src = selectedImageBase64;
-            document.getElementById('compressBadge').classList.remove('hidden');
+            statusSpan.innerText = "✅ ፎቶው ወደ KB ዝቅ ብሏል!";
           };
           img.src = e.target.result;
         };
         reader.readAsDataURL(file);
       }
-    }
-
-    // 🔗 Generate Teacher Link
-    function generateTeacherLink() {
-      const g = document.getElementById('genGrade').value;
-      const s = document.getElementById('genSec').value.trim();
-      const baseUrl = window.location.origin + window.location.pathname;
-      const link = `${baseUrl}?grade=${encodeURIComponent(g)}${s ? '&sec=' + encodeURIComponent(s) : ''}`;
-      
-      document.getElementById('genLinkText').innerText = link;
-      document.getElementById('generatedLinkBox').classList.remove('hidden');
-    }
-
-    function copyGeneratedLink() {
-      const link = document.getElementById('genLinkText').innerText;
-      navigator.clipboard.writeText(link);
-      alert("ሊንኩ ተገልብጧል (Copied)! ለመምህሩ መስጠት ትችላለህ።");
     }
 
     function performSearch() {
@@ -468,7 +358,7 @@
       const query = document.getElementById('filterSearch').value;
       const listContainer = document.getElementById('studentsList');
       
-      listContainer.innerHTML = `<div class="p-6 text-center text-purple-300"><i class="fas fa-spinner fa-spin text-xl mb-1"></i><p class="text-xs">እየተፈለገ ነው...</p></div>`;
+      listContainer.innerHTML = `<div class="p-6 text-center text-purple-300 text-xs"><i class="fas fa-spinner fa-spin text-lg mb-1"></i><p>እየተፈለገ ነው...</p></div>`;
 
       fetch(`${SCRIPT_URL}?action=search&grade=${encodeURIComponent(grade)}&section=${encodeURIComponent(section)}&query=${encodeURIComponent(query)}`)
         .then(res => res.json())
@@ -490,10 +380,10 @@
 
       container.innerHTML = loadedStudents.map((s, idx) => `
         <div onclick="selectStudentByIndex(${idx})" class="glass-panel p-3 rounded-xl cursor-pointer hover:border-purple-400 transition flex items-center space-x-3">
-          <img src="${s.photoUrl}" class="w-10 h-10 rounded-full object-cover avatar-3d">
+          <img src="${s.photoUrl}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" class="w-10 h-10 rounded-full object-cover avatar-3d">
           <div class="flex-1 min-w-0">
             <h4 class="font-bold text-white text-xs truncate">${s.name}</h4>
-            <p class="text-[10px] text-purple-300">ID: ${s.id} | ${s.grade} - ሴክሽን ${s.section}</p>
+            <p class="text-[10px] text-purple-300">ID: ${s.id} | ${s.grade} - ${s.section}</p>
           </div>
           <i class="fas fa-chevron-right text-[10px] text-purple-400"></i>
         </div>
@@ -511,11 +401,11 @@
 
       container.innerHTML = `
         <div class="flex flex-col sm:flex-row items-center gap-4 pb-4 border-b border-purple-500/20">
-          <img src="${currentStudent.photoUrl}" class="w-20 h-20 rounded-2xl object-cover avatar-3d">
+          <img src="${currentStudent.photoUrl}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" class="w-24 h-24 rounded-2xl object-cover avatar-3d">
           <div class="text-center sm:text-left space-y-1">
             <span class="px-2 py-0.5 bg-purple-900/60 border border-purple-400/40 text-purple-200 text-[10px] rounded-full font-bold">ID: ${currentStudent.id}</span>
             <h2 class="text-lg font-bold text-white">${currentStudent.name}</h2>
-            <p class="text-xs text-purple-300 font-semibold">${currentStudent.grade} | ሴክሽን: ${currentStudent.section}</p>
+            <p class="text-xs text-purple-300 font-semibold">${currentStudent.grade} | ክፍል: ${currentStudent.section}</p>
             <p class="text-[11px] text-slate-300"><i class="fas fa-user-shield text-purple-400 mr-1"></i> ወላጅ፡ ${currentStudent.parentName} (${currentStudent.phone1})</p>
             <div>${tgStatus}</div>
           </div>
@@ -528,7 +418,7 @@
 
         <div class="space-y-2">
           <label class="block text-[10px] font-bold text-purple-300 uppercase">ለወላጅ በቴሌግራም መልእክት መላኪያ</label>
-          <textarea id="tgMessageText" rows="2" placeholder="የዛሬ ውሎ፣ ውጤት ወይም ማሳሰቢያ እዚህ ይፃፉ..." class="w-full bg-slate-900/90 border border-purple-500/30 rounded-xl p-2.5 text-white text-xs"></textarea>
+          <textarea id="tgMessageText" rows="2" placeholder="የዛሬ ውሎ ወይም ውጤት እዚህ ይፃፉ..." class="w-full bg-slate-900/90 border border-purple-500/30 rounded-xl p-2.5 text-white text-xs"></textarea>
           <button onclick="sendDirectMessage()" class="btn-3d w-full py-2.5 rounded-xl flex justify-center items-center gap-2 text-xs">
             <i class="fab fa-telegram-plane text-sm"></i> መልእክት ላክ (Send)
           </button>
@@ -592,7 +482,7 @@
         closeModal('addModal');
         document.getElementById('addStudentForm').reset();
         document.getElementById('photoPreview').src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
-        document.getElementById('compressBadge').classList.add('hidden');
+        document.getElementById('compressStatus').innerText = "";
         selectedImageBase64 = "";
         saveBtn.innerText = "መዝግብ";
         saveBtn.disabled = false;
@@ -607,28 +497,25 @@
           document.getElementById('statStudents').innerText = data.totalStudents || 0;
           document.getElementById('statTelegram').innerText = data.telegramConnected || 0;
           document.getElementById('statMessages').innerText = data.totalMessages || 0;
-        }).catch(e => {});
+        });
     }
 
     function sendBroadcast() {
-      const targetGrade = document.getElementById('broadcastGrade').value;
       const text = document.getElementById('broadcastText').value;
       const statusDiv = document.getElementById('broadcastStatus');
       const btn = document.getElementById('broadcastBtn');
-
       if (!text.trim()) return alert("እባክዎ የማስታወቂያ መልእክት ይፃፉ!");
       btn.disabled = true;
       statusDiv.innerHTML = `<span class="text-pink-300"><i class="fas fa-spinner fa-spin"></i> እየተላከ ነው...</span>`;
-
       fetch(SCRIPT_URL, {
         method: "POST",
-        body: JSON.stringify({ action: "broadcastMessage", targetGrade: targetGrade, message: text })
+        body: JSON.stringify({ action: "broadcastMessage", targetGrade: "ALL", message: text })
       })
       .then(res => res.json())
       .then(res => {
         btn.disabled = false;
         if (res.success) {
-          statusDiv.innerHTML = `<span class="text-green-400 font-bold"><i class="fas fa-check-circle"></i> ለ ${res.sentCount} ወላጆች ተልኳል!</span>`;
+          statusDiv.innerHTML = `<span class="text-green-400 font-bold">ለ ${res.sentCount} ወላጆች ተልኳል!</span>`;
           document.getElementById('broadcastText').value = "";
           fetchAdminStats();
         } else {
